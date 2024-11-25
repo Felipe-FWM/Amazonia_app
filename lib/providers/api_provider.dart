@@ -57,6 +57,10 @@ class ApiProvider with ChangeNotifier {
       try {
         final response = await http.get(
           Uri.parse('$baseUrl/$endpoint'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
         );
 
         print('Endpoint: $endpoint, Status: ${response.statusCode}');

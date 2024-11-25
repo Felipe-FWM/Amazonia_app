@@ -7,27 +7,27 @@ import 'package:amazonia_app/screens/home_screen.dart';
 import 'package:amazonia_app/screens/tree_details_screen.dart';
 
 void main() {
-runApp(MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-@override
-Widget build(BuildContext context) {
-return MultiProvider(
-providers: [
-ChangeNotifierProvider(create: (_) => AuthProvider()),
-ChangeNotifierProvider(create: (_) => ApiProvider()),
-],
-child: MaterialApp(
-title: 'Amazônia App',
-theme: ThemeData(primarySwatch: Colors.green),
-initialRoute: '/',
-routes: {
-'/': (ctx) => LoginScreen(),
-'/home': (ctx) => HomeScreen(),
-'/tree-details': (ctx) => TreeDetailsScreen(),
-},
-),
-);
-}
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => ApiProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Amazônia App',
+        theme: ThemeData(primarySwatch: Colors.green),
+        initialRoute: '/',
+        routes: {
+          '/': (ctx) => LoginScreen(),
+          '/home': (ctx) => HomeScreen(),
+          '/tree-details': (ctx) => TreeDetailsScreen(),
+        },
+      ),
+    );
+  }
 }
