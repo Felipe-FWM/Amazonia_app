@@ -52,9 +52,6 @@ class ApiProvider with ChangeNotifier {
     final endpoints = [
       'especies/all/$id'
     ];
-
-    print(endpoints);
-
     
 
     final futures = endpoints.map((endpoint) async {
@@ -66,17 +63,14 @@ class ApiProvider with ChangeNotifier {
           },
         );
 
-        print('GRITANDOOOOOOOOOOOOOOOOOOOO');
-        print('Endpoint: $endpoint, Status: ${response.statusCode}');
-        print(response.body);
-
         if (response.statusCode == 200) {
+          print('printaaaaaaaa');
+          print(response.body);
           return MapEntry('data', json.decode(response.body)['data']);
         } else {
           return MapEntry('data', null);
         }
       } catch (e) {
-        print('Erro ao buscar $endpoint: $e');
         return MapEntry('data', null);
       }
     });
