@@ -78,7 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     final especie = _filteredEspecies[index];
                     final nomeCientifico = especie['nome_cientifico'] ?? 'Sem nome';
-                    final descricao = especie['descricao'] ?? 'Sem descrição';
                     final imagem = especie['imagem'];
 
                     return GestureDetector(
@@ -121,21 +120,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     nomeCientifico,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                                      fontSize: 25
                                     ),
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    descricao,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[600],
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
                                 ),
                               ],
                             ),
