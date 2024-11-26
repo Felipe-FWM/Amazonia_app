@@ -28,17 +28,20 @@ Future<void> _requestPermissions() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    
     return MultiProvider(
+
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ApiProvider()),
       ],
+      
       child: MaterialApp(
         title: 'Amazônia App',
         theme: ThemeData(primarySwatch: Colors.green),
-        initialRoute: '/',
+        initialRoute: '/home',
         routes: {
-          '/': (ctx) => LoginScreen(),
+          // '/': (ctx) => LoginScreen(),
           '/home': (ctx) => HomeScreen(),
           '/tree-details': (ctx) => TreeDetailsScreen(),
         },

@@ -9,17 +9,17 @@ class ApiProvider with ChangeNotifier {
 
 
   Future<List<dynamic>> fetchEspecies(BuildContext context) async {
-    final token = Provider.of<AuthProvider>(context, listen: false).authToken;
+    // final token = Provider.of<AuthProvider>(context, listen: false).authToken;
 
-    if (token == null) {
-      throw Exception("Token de autenticação não encontrado.");
-    }
+    // if (token == null) {
+    //   throw Exception("Token de autenticação não encontrado.");
+    // }
 
     final response = await http.get(
       Uri.parse('$baseUrl/especies'),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
+        // 'Authorization': 'Bearer $token',
       },
     );
 
@@ -33,11 +33,11 @@ class ApiProvider with ChangeNotifier {
 
 
   Future<Map<String, dynamic>> fetchEspecieDetails(BuildContext context, int id) async {
-    final token = Provider.of<AuthProvider>(context, listen: false).authToken;
+    // final token = Provider.of<AuthProvider>(context, listen: false).authToken;
 
-    if (token == null) {
-      throw Exception("Token de autenticação não encontrado.");
-    }
+    // if (token == null) {
+    //   throw Exception("Token de autenticação não encontrado.");
+    // }
 
     final endpoints = [
       'especies/all/$id'

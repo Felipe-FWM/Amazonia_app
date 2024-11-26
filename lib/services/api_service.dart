@@ -7,22 +7,23 @@ final String apiUrl = "https://noodletop.com.br/api/amazonia";
 
 // Função para pegar o token de autenticação
 Future<String?> _getAuthToken() async {
-final prefs = await SharedPreferences.getInstance();
-return prefs.getString('auth_token');
+// final prefs = await SharedPreferences.getInstance();
+// return prefs.getString('auth_token');
+return 'true';
 }
 
 // Função genérica para fazer GET
 Future<dynamic> _get(String endpoint) async {
-final token = await _getAuthToken();
-if (token == null) {
-throw Exception('Token de autenticação não encontrado');
-}
+// final token = await _getAuthToken();
+// if (token == null) {
+// throw Exception('Token de autenticação não encontrado');
+// }
 
 final response = await http.get(
 Uri.parse('$apiUrl/$endpoint'),
 headers: {
 'Content-Type': 'application/json',
-'Authorization': 'Bearer $token', 
+// 'Authorization': 'Bearer $token', 
 },
 );
 
