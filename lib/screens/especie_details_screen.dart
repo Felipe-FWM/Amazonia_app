@@ -34,8 +34,6 @@ class _EspecieDetalhesScreenState extends State<EspecieDetalhesScreen> {
         especieDetails = data['data'];
         isLoading = false;
       });
-      print('AMIGO ESTOU AQUI');
-      print(data['data']);
     } catch (error) {
       print("Erro ao carregar detalhes da espécie: $error");
       setState(() {
@@ -50,24 +48,38 @@ class _EspecieDetalhesScreenState extends State<EspecieDetalhesScreen> {
     return MemoryImage(bytes);
   }
 
-  Widget _buildSection(String title, String content) {
+  Widget _buildTopicTitle(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.green,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubsection(String subtitle, String content) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            subtitle,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.green,
+              color: Colors.black,
             ),
           ),
           SizedBox(height: 4),
           Text(
             content.isNotEmpty ? content : 'Dados não disponíveis',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 14),
           ),
         ],
       ),
@@ -108,344 +120,317 @@ class _EspecieDetalhesScreenState extends State<EspecieDetalhesScreen> {
                       children: [
                         // Exibição da imagem da espécie
                         _buildImageSection(especieDetails?['Especie']['imagem'] ?? ''),
-                        
-                        // Exibição do nome científico e descrição
-                        _buildSection(
+
+                        // Espécie
+                        _buildTopicTitle("Espécie"),
+                        _buildSubsection(
                           "Nome Científico",
-                          especieDetails?['Especie']['nome_cientifico'] ?? 'Dados não disponíveis',
+                          especieDetails?['Especie']['nome_cientifico'] ?? '',
                         ),
-                        _buildSection(
+                        _buildSubsection(
                           "Descrição",
-                          especieDetails?['Especie']['descricao'] ?? 'Dados não disponíveis',
+                          especieDetails?['Especie']['descricao'] ?? '',
                         ),
 
-
-
-                        //TABELA TAXONOMIA:
-                        _buildSection(
-                          "TAXONOMIA E NOMENCLATURA",
-                          especieDetails?['Taxonomia']?['divisao'] ?? 'Dados não disponíveis',
+                        // Taxonomia e Nomenclatura
+                        _buildTopicTitle("Taxonomia e Nomenclatura"),
+                        _buildSubsection(
+                          "Divisão",
+                          especieDetails?['Taxonomia']?['divisao'] ?? '',
                         ),
-
-                         _buildSection(
+                        _buildSubsection(
                           "Clado",
-                          especieDetails?['Taxonomia']?['clado'] ?? 'Dados não disponíveis',
+                          especieDetails?['Taxonomia']?['clado'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Ordem",
-                          especieDetails?['Taxonomia']?['ordem'] ?? 'Dados não disponíveis',
+                          especieDetails?['Taxonomia']?['ordem'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Família",
-                          especieDetails?['Taxonomia']?['familia'] ?? 'Dados não disponíveis',
+                          especieDetails?['Taxonomia']?['familia'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Subfamília",
-                          especieDetails?['Taxonomia']?['subfamilia'] ?? 'Dados não disponíveis',
+                          especieDetails?['Taxonomia']?['subfamilia'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Gênero",
-                          especieDetails?['Taxonomia']?['genero'] ?? 'Dados não disponíveis',
+                          especieDetails?['Taxonomia']?['genero'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Tribo",
-                          especieDetails?['Taxonomia']?['tribo'] ?? 'Dados não disponíveis',
+                          especieDetails?['Taxonomia']?['tribo'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Seção",
-                          especieDetails?['Taxonomia']?['secao'] ?? 'Dados não disponíveis',
+                          especieDetails?['Taxonomia']?['secao'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Binômio específico",
-                          especieDetails?['Taxonomia']?['binomio_especifico'] ?? 'Dados não disponíveis',
+                          especieDetails?['Taxonomia']?['binomio_especifico'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Primeira publicação",
-                          especieDetails?['Taxonomia']?['primeira_publicacao'] ?? 'Dados não disponíveis',
+                          especieDetails?['Taxonomia']?['primeira_publicacao'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Sinonímia botânica",
-                          especieDetails?['Taxonomia']?['sinonimia_botanica'] ?? 'Dados não disponíveis',
+                          especieDetails?['Taxonomia']?['sinonimia_botanica'] ?? '',
                         ),
-
-
-                        _buildSection(
+                        _buildSubsection(
                           "Nomes vulgares por Unidades da Federação",
-                          especieDetails?['Taxonomia']?['nomes_vulgares_uf'] ?? 'Dados não disponíveis',
+                          especieDetails?['Taxonomia']?['nomes_vulgares_uf'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Nomes vulgares no exterior",
-                          especieDetails?['Taxonomia']?['nomes_vulgares_exter'] ?? 'Dados não disponíveis',
+                          especieDetails?['Taxonomia']?['nomes_vulgares_exter'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Etimologia",
+                          especieDetails?['Taxonomia']?['etimologia'] ?? '',
                         ),
 
-
-                      //TABELA DESCRIÇÃO BOTÂNICA
-                        _buildSection(
-                          "Regeneração Natural",
-                          especieDetails?['AspectosEcologicos']?['regeneracao_natural'] ?? 'Dados não disponíveis',
+                        // Descrição Botânica
+                        _buildTopicTitle("Descrição Botânica"),
+                        _buildSubsection(
+                          "Forma biológica e foliação",
+                          especieDetails?['DescricaoBotanica']?['forma_biologica_foliacao'] ?? '',
                         ),
-                        _buildSection(
-                          "Aproveitamento",
-                          especieDetails?['ProdutosUtilizacoes']?['aproveitamento_alimentar'] ?? 'Dados não disponíveis',
+                        _buildSubsection(
+                          "Tronco",
+                          especieDetails?['DescricaoBotanica']?['tronco'] ?? '',
                         ),
-                        _buildSection(
-                          "Biotecnológico Energético",
-                          especieDetails?['ComposicaoBiotecnologica']?['variacao_carboidratos'] ?? 'Dados não disponíveis',
+                        _buildSubsection(
+                          "Ramificação",
+                          especieDetails?['DescricaoBotanica']?['ramificacao'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Casca",
+                          especieDetails?['DescricaoBotanica']?['casca'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Folhas",
+                          especieDetails?['DescricaoBotanica']?['folhas'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Inflorescências",
+                          especieDetails?['DescricaoBotanica']?['inflorescencias'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Flores",
+                          especieDetails?['DescricaoBotanica']?['flores'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Fruto",
+                          especieDetails?['DescricaoBotanica']?['fruto'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Sementes",
+                          especieDetails?['DescricaoBotanica']?['sementes'] ?? '',
                         ),
 
-
-                        //BIOLOGIA REPRODUTIVA E EVENTOS FENOLÓGICOS
-                        _buildSection(
+                        // Biologia Reprodutiva e Eventos Fenológicos
+                        _buildTopicTitle("Biologia Reprodutiva e Eventos Fenológicos"),
+                        _buildSubsection(
                           "Sistema sexual",
-                          especieDetails?['BiologiaReprodutiva']?['sistema_sexual'] ?? 'Dados não disponíveis',
+                          especieDetails?['BiologiaReprodutiva']?['sistema_sexual'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Vetor de polinização",
-                          especieDetails?['BiologiaReprodutiva']?['vetor_polinizacao'] ?? 'Dados não disponíveis',
+                          especieDetails?['BiologiaReprodutiva']?['vetor_polinizacao'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Floração",
-                          especieDetails?['BiologiaReprodutiva']?['floracao'] ?? 'Dados não disponíveis',
+                          especieDetails?['BiologiaReprodutiva']?['floracao'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Frutificação",
-                          especieDetails?['BiologiaReprodutiva']?['frutificacao'] ?? 'Dados não disponíveis',
+                          especieDetails?['BiologiaReprodutiva']?['frutificacao'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Dispersão de frutos e sementes",
-                          especieDetails?['BiologiaReprodutiva']?['dispersao_frutos_sementes'] ?? 'Dados não disponíveis',
+                          especieDetails?['BiologiaReprodutiva']?['dispersao_frutos_sementes'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Qualidade das sementes",
-                          especieDetails?['BiologiaReprodutiva']?['qualidade_sementes'] ?? 'Dados não disponíveis',
+                          especieDetails?['BiologiaReprodutiva']?['qualidade_sementes'] ?? '',
                         ),
 
-
-                      //OCORRÊNCIA NATURAL
-
-                        _buildSection(
-                              "Latidudes",
-                              especieDetails?['AspectosEcologicos']?['latitudes'] ?? 'Dados não disponíveis',
-                            ),
-
-                        _buildSection(
-                              "Variação altitudinal",
-                              especieDetails?['AspectosEcologicos']?['variacao_altitudinal'] ?? 'Dados não disponíveis',
-                            ),
-
-                        _buildSection(
-                              "Regeneração natural",
-                              especieDetails?['AspectosEcologicos']?['mapa_imagem'] ?? 'Dados não disponíveis',
-                            ),
-
-
-
-                      //ASPECTOS ECOLÓGICOS
-
-
-                        _buildSection(
-                            "Grupo sucessional",
-                            especieDetails?['AspectosEcologicos']?['grupo_sucessional'] ?? 'Dados não disponíveis',
-                          ),
-
-
-                        _buildSection(
-                          "Importância Sociológica",
-                          especieDetails?['AspectosEcologicos']?['importancia_sociologica'] ?? 'Dados não disponíveis',
+                        // Ocorrência Natural
+                        _buildTopicTitle("Ocorrência Natural"),
+                        _buildSubsection(
+                          "Latitudes",
+                          especieDetails?['AspectosEcologicos']?['latitudes'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Variação altitudinal",
+                          especieDetails?['AspectosEcologicos']?['variacao_altitudinal'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Mapa (Imagem)",
+                          especieDetails?['AspectosEcologicos']?['mapa_imagem'] ?? '',
                         ),
 
-                        _buildSection(
+                        // Aspectos Ecológicos
+                        _buildTopicTitle("Aspectos Ecológicos"),
+                        _buildSubsection(
+                          "Grupo sucessional",
+                          especieDetails?['AspectosEcologicos']?['grupo_sucessional'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Importância sociológica",
+                          especieDetails?['AspectosEcologicos']?['importancia_sociologica'] ?? '',
+                        ),
+                        _buildSubsection(
                           "Regeneração natural",
-                          especieDetails?['AspectosEcologicos']?['regeneracao_natural'] ?? 'Dados não disponíveis',
+                          especieDetails?['AspectosEcologicos']?['regeneracao_natural'] ?? '',
                         ),
 
-
-
-                      //PRODUTOS E UTILIZAÇÕES
-                        _buildSection(
+                        // Produtos e Utilizações
+                        _buildTopicTitle("Produtos e Utilizações"),
+                        _buildSubsection(
                           "Aproveitamento alimentar",
-                          especieDetails?['ProdutosUtilizacoes']?['aproveitamento_alimentar'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProdutosUtilizacoes']?['aproveitamento_alimentar'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Apícola",
-                          especieDetails?['ProdutosUtilizacoes']?['apicola'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProdutosUtilizacoes']?['apicola'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Celulose e papel",
-                          especieDetails?['ProdutosUtilizacoes']?['celulose_papel'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProdutosUtilizacoes']?['celulose_papel'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Energia",
-                          especieDetails?['ProdutosUtilizacoes']?['energia'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProdutosUtilizacoes']?['energia'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Madeira serrada e roliça",
-                          especieDetails?['ProdutosUtilizacoes']?['madeira_serrada_rolica'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProdutosUtilizacoes']?['madeira_serrada_rolica'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Medicinal",
-                          especieDetails?['ProdutosUtilizacoes']?['medicinal'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProdutosUtilizacoes']?['medicinal'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Alerta",
-                          especieDetails?['ProdutosUtilizacoes']?['alerta'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProdutosUtilizacoes']?['alerta'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Paisagístico",
-                          especieDetails?['ProdutosUtilizacoes']?['paisagistico'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProdutosUtilizacoes']?['paisagistico'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Plantios com finalidade ambiental",
-                          especieDetails?['ProdutosUtilizacoes']?['plantios_ambientais'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProdutosUtilizacoes']?['plantios_ambientais'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Substâncias tanantes",
-                          especieDetails?['ProdutosUtilizacoes']?['substancias_tanantes'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProdutosUtilizacoes']?['substancias_tanantes'] ?? '',
                         ),
 
+                        // Composição – Potencial Biotecnológico
+                        _buildTopicTitle("Composição – Potencial Biotecnológico"),
+                        _buildSubsection(
+                          "Variação do teor de carboidratos",
+                          especieDetails?['ComposicaoBiotecnologica']?['variacao_carboidratos'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Variação do teor de Proteínas",
+                          especieDetails?['ComposicaoBiotecnologica']?['variacao_proteinas'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Grupo substâncias",
+                          especieDetails?['ComposicaoBiotecnologica']?['grupo_substancias'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Levantamento bibliográfico",
+                          especieDetails?['ComposicaoBiotecnologica']?['levantamento_bibliografico'] ?? '',
+                        ),
+                        _buildSubsection(
+                          "Composição de nutrientes e uso como biofertilizante",
+                          especieDetails?['ComposicaoBiotecnologica']?['biofertilizante'] ?? '',
+                        ),
 
-
-                      //Composição – Potencial Biotecnológico
-
-                        _buildSection(
-                            "Variação do teor de carboidratos",
-                            especieDetails?['ComposicaoBiotecnologica']?['variacao_carboidratos'] ?? 'Dados não disponíveis',
-                          ),
-
-                        _buildSection(
-                            "Variação do teor de Proteínas",
-                            especieDetails?['ComposicaoBiotecnologica']?['variacao_proteinas'] ?? 'Dados não disponíveis',
-                          ),
-                        
-                        _buildSection(
-                            "Grupo substâncias",
-                            especieDetails?['ComposicaoBiotecnologica']?['grupo_substancias'] ?? 'Dados não disponíveis',
-                          ),
-
-                        _buildSection(
-                            "Levantamento bibliográfico",
-                            especieDetails?['ComposicaoBiotecnologica']?['levantamento_bibliografico'] ?? 'Dados não disponíveis',
-                          ),
-
-                        _buildSection(
-                            "Composição de nutrientes e uso como biofertilizante",
-                            especieDetails?['ComposicaoBiotecnologica']?['biofertilizante'] ?? 'Dados não disponíveis',
-                          ),
-
-
-
-                        //CULTIVO EM VIVEIROS
-                        
-                        _buildSection(
+                        // Cultivo em viveiros
+                        _buildTopicTitle("Cultivo em viveiros"),
+                        _buildSubsection(
                           "Implantação de Viveiros Florestais Experimentais em Escolas",
-                          especieDetails?['CultivoViveiros']?['implantacao_viveiros'] ?? 'Dados não disponíveis',
+                          especieDetails?['CultivoViveiros']?['implantacao_viveiros'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Características Silviculturais",
-                          especieDetails?['CultivoViveiros']?['caracteristicas_silviculturais'] ?? 'Dados não disponíveis',
+                          especieDetails?['CultivoViveiros']?['caracteristicas_silviculturais'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Hábito",
-                          especieDetails?['CultivoViveiros']?['habito'] ?? 'Dados não disponíveis',
+                          especieDetails?['CultivoViveiros']?['habito'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Sistemas de plantio",
-                          especieDetails?['CultivoViveiros']?['sistemas_plantio'] ?? 'Dados não disponíveis',
+                          especieDetails?['CultivoViveiros']?['sistemas_plantio'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Sistemas agroflorestais (SAFs)",
-                          especieDetails?['CultivoViveiros']?['sistemas_agroflorestais'] ?? 'Dados não disponíveis',
+                          especieDetails?['CultivoViveiros']?['sistemas_agroflorestais'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Crescimento e Produção",
-                          especieDetails?['CultivoViveiros']?['crescimento_producao'] ?? 'Dados não disponíveis',
+                          especieDetails?['CultivoViveiros']?['crescimento_producao'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Número de sementes por quilograma",
-                          especieDetails?['CultivoViveiros']?['numero_sementes_por_kg'] ?? 'Dados não disponíveis',
+                          especieDetails?['CultivoViveiros']?['numero_sementes_por_kg'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Tratamento pré-germinativo",
-                          especieDetails?['CultivoViveiros']?['tratamento_pre_germinativo'] ?? 'Dados não disponíveis',
+                          especieDetails?['CultivoViveiros']?['tratamento_pre_germinativo'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Longevidade e armazenamento",
-                          especieDetails?['CultivoViveiros']?['longevidade_armazenamento'] ?? 'Dados não disponíveis',
+                          especieDetails?['CultivoViveiros']?['longevidade_armazenamento'] ?? '',
                         ),
-
-                        _buildSection(
+                        _buildSubsection(
                           "Germinação em laboratório",
-                          especieDetails?['CultivoViveiros']?['germinacao_laboratorio'] ?? 'Dados não disponíveis',
+                          especieDetails?['CultivoViveiros']?['germinacao_lab'] ?? '',
                         ),
 
-
-                      //PRODUÇÃO DE MUDAS
-                         _buildSection(
+                        // Produção de Mudas
+                        _buildTopicTitle("Produção de Mudas"),
+                        _buildSubsection(
                           "Semeadura",
-                          especieDetails?['ProducaoMudas']?['semeadura'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProducaoMudas']?['semeadura'] ?? '',
                         ),
-
-                         _buildSection(
+                        _buildSubsection(
                           "Germinação",
-                          especieDetails?['ProducaoMudas']?['germinacao'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProducaoMudas']?['germinacao'] ?? '',
                         ),
-
-                         _buildSection(
+                        _buildSubsection(
                           "Associação simbiótica",
-                          especieDetails?['ProducaoMudas']?['associacao_simbiotica'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProducaoMudas']?['associacao_simbiotica'] ?? '',
                         ),
-
-                         _buildSection(
+                        _buildSubsection(
                           "Cuidados especiais",
-                          especieDetails?['ProducaoMudas']?['cuidados_especiais'] ?? 'Dados não disponíveis',
+                          especieDetails?['ProducaoMudas']?['cuidados_especiais'] ?? '',
                         ),
 
-
-                        //PRINCIPAIS PRAGAS
-                        _buildSection(
+                        // Principais Pragas
+                        _buildTopicTitle("Principais Pragas"),
+                        _buildSubsection(
                           "Pragas",
-                          especieDetails?['Pragas']?['descricao'] ?? 'Dados não disponíveis',
+                          especieDetails?['Pragas']?['descricao'] ?? '',
                         ),
 
-                        //SOLOS
-                        _buildSection(
+                        // Solos
+                        _buildTopicTitle("Solos"),
+                        _buildSubsection(
                           "Solos",
-                          especieDetails?['Solos']?['descricao'] ?? 'Dados não disponíveis',
+                          especieDetails?['Solos']?['descricao'] ?? '',
                         ),
 
-                        //ANEXOS
+                        // Anexo (Fotos complementares)
+                        _buildTopicTitle("Anexo (Fotos complementares)"),
                         if (especieDetails?['Anexos'] != null)
                           ...especieDetails?['Anexos'].map<Widget>((anexo) {
                             return Padding(
@@ -477,8 +462,6 @@ class _EspecieDetalhesScreenState extends State<EspecieDetalhesScreen> {
                     ),
                   ),
                 ),
-      
-    
     );
   }
 }

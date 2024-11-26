@@ -13,7 +13,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<dynamic> _especies = [];
+  List<dynamic> _filteredEspecies = [];
   bool _isLoading = true;
+  bool _isSearching = false;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -28,114 +31,139 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.green,
         leading: IconButton(
           icon: Image.asset(
-            'assets/logo_preta.png', // Caminho para o arquivo da imagem
-            height: 24, // Ajuste a altura da imagem conforme necessário
-            width: 24,  // Ajuste a largura da imagem conforme necessário
-            fit: BoxFit.contain, // Para ajustar o tamanho sem distorcer a imagem
+            'assets/logo_preta.png',
+            height: 24,
+            width: 24,
+            fit: BoxFit.contain,
           ),
           onPressed: () {},
         ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Populares',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          Expanded(
-            child: _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : _especies.isEmpty
-                    ? Center(child: Text("Nenhuma espécie encontrada."))
-                    : ListView.builder(
-                        padding: EdgeInsets.all(16),
-                        itemCount: _especies.length,
-                        itemBuilder: (context, index) {
-                          final especie = _especies[index];
-                          final nomeCientifico = especie['nome_cientifico'] ?? 'Sem nome';
-                          final descricao = especie['descricao'] ?? 'Sem descrição';
-                          final imagem = especie['imagem'];
-
-                          return GestureDetector(
-                            onTap: () {
-                              // Navegar para a tela de detalhes da espécie ao clicar no card
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EspecieDetalhesScreen(
-                                    especieId: especie["id"].toString(), // Passando o id da espécie
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 16),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: Card(
-                                  elevation: 5,
-                                  shadowColor: Colors.black.withOpacity(0.2),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        height: 200,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: (imagem != null && imagem.isNotEmpty)
-                                                ? MemoryImage(_base64ToImage(imagem))
-                                                : AssetImage('assets/default_image.png') as ImageProvider,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          nomeCientifico,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                        child: Text(
-                                          descricao,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[600],
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+        actions: [
+          IconButton(
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() {
+                if (_isSearching) {
+                  _isSearching = false;
+                  _searchController.clear();
+                  _filteredEspecies = _especies; // Restaura a lista original
+                } else {
+                  _isSearching = true;
+                }
+              });
+            },
           ),
         ],
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: "Buscar espécie...",
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.white70),
+                ),
+                style: TextStyle(color: Colors.white),
+                onChanged: _filterEspecies,
+              )
+            : null,
       ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : _filteredEspecies.isEmpty
+              ? Center(child: Text("Nenhuma espécie encontrada."))
+              : ListView.builder(
+                  padding: EdgeInsets.all(16),
+                  itemCount: _filteredEspecies.length,
+                  itemBuilder: (context, index) {
+                    final especie = _filteredEspecies[index];
+                    final nomeCientifico = especie['nome_cientifico'] ?? 'Sem nome';
+                    final descricao = especie['descricao'] ?? 'Sem descrição';
+                    final imagem = especie['imagem'];
+
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EspecieDetalhesScreen(
+                              especieId: especie["id"].toString(),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 16),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Card(
+                            elevation: 5,
+                            shadowColor: Colors.black.withOpacity(0.2),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 200,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: (imagem != null && imagem.isNotEmpty)
+                                          ? MemoryImage(_base64ToImage(imagem))
+                                          : AssetImage('assets/default_image.png')
+                                              as ImageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    nomeCientifico,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    descricao,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
       floatingActionButton: FloatingActionButton(
         onPressed: _refreshData,
         backgroundColor: Colors.green,
         child: Icon(Icons.refresh),
       ),
     );
+  }
+
+  void _filterEspecies(String query) {
+    if (query.isEmpty) {
+      setState(() => _filteredEspecies = _especies);
+    } else {
+      setState(() {
+        _filteredEspecies = _especies
+            .where((especie) =>
+                (especie['nome_cientifico'] ?? '').toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      });
+    }
   }
 
   Future<void> _refreshData() async {
@@ -150,6 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (especies.isNotEmpty) {
         setState(() {
           _especies = especies;
+          _filteredEspecies = especies; // Atualiza a lista filtrada também
         });
         await _cacheEspecies(especies);
       } else {
@@ -166,7 +195,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final prefs = await SharedPreferences.getInstance();
     final cachedData = prefs.getString('especies');
     if (cachedData != null) {
-      setState(() => _especies = List.from(json.decode(cachedData)));
+      setState(() {
+        _especies = List.from(json.decode(cachedData));
+        _filteredEspecies = _especies;
+      });
     }
     await _fetchEspecies();
   }
