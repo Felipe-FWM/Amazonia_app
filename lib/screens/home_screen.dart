@@ -27,7 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.green,
         leading: IconButton(
-          icon: Icon(Icons.nature, color: Colors.white),
+          icon: Image.asset(
+            'assets/logo_preta.png', // Caminho para o arquivo da imagem
+            height: 24, // Ajuste a altura da imagem conforme necessário
+            width: 24,  // Ajuste a largura da imagem conforme necessário
+            fit: BoxFit.contain, // Para ajustar o tamanho sem distorcer a imagem
+          ),
           onPressed: () {},
         ),
       ),

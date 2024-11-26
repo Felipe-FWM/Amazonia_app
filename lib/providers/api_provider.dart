@@ -23,6 +23,14 @@ class ApiProvider with ChangeNotifier {
       },
     );
 
+    print('AQUIIIIIIIIIII');
+    print(response.body);
+
+
+
+    print(response.statusCode);
+
+
     if (response.statusCode == 200) {
       return json.decode(response.body)['data'];
     } else {
@@ -31,27 +39,23 @@ class ApiProvider with ChangeNotifier {
     }
   }
 
+  
+
   // Método para buscar os detalhes de uma espécie
   Future<Map<String, dynamic>> fetchEspecieDetails(BuildContext context, int id) async {
     final token = Provider.of<AuthProvider>(context, listen: false).authToken;
+
     if (token == null) {
       throw Exception("Token de autenticação não encontrado.");
     }
 
     final endpoints = [
-      'taxonomias/especie/$id',
-      'descricoes-botanicas/especie/$id',
-      'biologias-reprodutivas/especie/$id',
-      'ocorrencias-naturais/especie/$id',
-      'aspectos-ecologicos/especie/$id',
-      'produtos-utilizacoes/especie/$id',
-      'composicoes-biotecnologicas/especie/$id',
-      'cultivos-viveiros/especie/$id',
-      'prodcoes-mudas/especie/$id',
-      'pragas/especie/$id',
-      'solos/especie/$id',
-      'anexos/especie/$id'
+      'especies/all/$id'
     ];
+
+    print(endpoints);
+
+    
 
     final futures = endpoints.map((endpoint) async {
       try {
@@ -59,24 +63,28 @@ class ApiProvider with ChangeNotifier {
           Uri.parse('$baseUrl/$endpoint'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
           },
         );
 
+        print('GRITANDOOOOOOOOOOOOOOOOOOOO');
         print('Endpoint: $endpoint, Status: ${response.statusCode}');
+        print(response.body);
 
         if (response.statusCode == 200) {
-          return MapEntry(endpoint, json.decode(response.body)['data']);
+          return MapEntry('data', json.decode(response.body)['data']);
         } else {
-          return MapEntry(endpoint, null);
+          return MapEntry('data', null);
         }
       } catch (e) {
         print('Erro ao buscar $endpoint: $e');
-        return MapEntry(endpoint, null);
+        return MapEntry('data', null);
       }
     });
 
     final results = await Future.wait(futures);
+
+    print('MAPA JHONSONNNNN');
+    print(results);
     return Map.fromEntries(results);
   }
 }

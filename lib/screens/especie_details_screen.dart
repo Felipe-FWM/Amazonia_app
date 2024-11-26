@@ -1,9 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
 import '../providers/api_provider.dart';
-import '../providers/auth_provider.dart';
 
 class EspecieDetalhesScreen extends StatefulWidget {
   final String especieId;
@@ -17,6 +15,7 @@ class EspecieDetalhesScreen extends StatefulWidget {
 class _EspecieDetalhesScreenState extends State<EspecieDetalhesScreen> {
   Map<String, dynamic>? especieDetails;
   bool isLoading = true;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -26,26 +25,21 @@ class _EspecieDetalhesScreenState extends State<EspecieDetalhesScreen> {
 
   Future<void> _loadEspecieDetalhes() async {
     try {
-      // Obtém a instância do ApiProvider e AuthProvider
       final apiProvider = Provider.of<ApiProvider>(context, listen: false);
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final data = await apiProvider.fetchEspecieDetails(
+        context,
+        int.parse(widget.especieId),
+      );
 
-      // Verifica se o token está disponível
-      if (authProvider.authToken == null) {
-        throw Exception("Token de autenticação não encontrado.");
-      }
 
-      // Faz a requisição para buscar os detalhes da espécie
-      final data = await apiProvider.fetchEspecieDetails(context, int.parse(widget.especieId));
-
+      print('PRINTTTT AQUIIII');
+      print(data['data']['Taxonomia']);
+      print(data);
+      
       setState(() {
-        especieDetails = data;
+        especieDetails = data['data']['Especie']; // Ajustando o acesso aos dados
         isLoading = false;
       });
-
-      // Adicionando um log para verificar o que está sendo retornado pela API
-      print("Detalhes da espécie recebidos: $especieDetails");
-
     } catch (error) {
       print("Erro ao carregar detalhes da espécie: $error");
       setState(() {
@@ -54,11 +48,41 @@ class _EspecieDetalhesScreenState extends State<EspecieDetalhesScreen> {
     }
   }
 
+
+  ImageProvider _base64ToImage(String base64String) {
+    // Remover o prefixo 'data:image/png;base64,' (ou similar)
+    final cleanBase64 = base64String.split(',').last;
+
+    // Decodificar a string Base64 em bytes
+    final bytes = base64Decode(cleanBase64);
+
+    // Retornar uma MemoryImage com os bytes decodificados
+    return MemoryImage(bytes);
+  }
+
+
+
+  // Função para alternar entre as telas ao clicar na Navigation Bar
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    // Aqui você pode definir navegações para diferentes telas
+    if (index == 0) {
+      Navigator.pushNamed(context, '/home'); // Exemplo: tela inicial
+    } else if (index == 1) {
+      Navigator.pushNamed(context, '/map'); // Exemplo: tela de mapa
+    } else if (index == 2) {
+      Navigator.pushNamed(context, '/especies'); // Exemplo: lista de espécies
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(especieDetails?['taxonomias/especie/${widget.especieId}']?['nome_comum'] ?? 'Detalhes da Espécie'),
+        title: Text('Detalhes da Espécie'),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -70,56 +94,96 @@ class _EspecieDetalhesScreenState extends State<EspecieDetalhesScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Exibir imagem se a URL da imagem estiver disponível
-                        if (especieDetails?['taxonomias/especie/${widget.especieId}']?['imagem_url'] != null)
-                          CachedNetworkImage(
-                            imageUrl: especieDetails?['taxonomias/especie/${widget.especieId}']?['imagem_url'] ?? '',
-                            placeholder: (context, url) => CircularProgressIndicator(),
-                            errorWidget: (context, url, error) => Icon(Icons.error),
-                            height: 250,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
+                        // Exibição da imagem
+                        Container(
+                          height: 250,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: (especieDetails?['imagem'] != null &&
+                                      especieDetails!['imagem'].isNotEmpty)
+                                  ? _base64ToImage(especieDetails!['imagem'])
+                                  : AssetImage('assets/default_image.png')
+                                      as ImageProvider,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        SizedBox(height: 16),
-
-                        // Exibindo nome comum, com verificação de nulidade
-                        Text(
-                          especieDetails?['taxonomias/especie/${widget.especieId}']?['nome_comum'] ?? 'Nome comum indisponível',
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 8),
-
-                        // Exibindo nome científico, com verificação de nulidade
-                        Text(
-                          especieDetails?['taxonomias/especie/${widget.especieId}']?['nome_cientifico'] ?? 'Nome científico indisponível',
-                          style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
                         ),
                         SizedBox(height: 16),
-
-                        // Exibindo descrição botânica com verificação de nulidade
-                        Text(
-                          "Descrição Botânica:",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        // Exibição de cada seção com título e dados
+                        buildSection(
+                          title: "Nome Científico",
+                          content: especieDetails?['nome_cientifico'] ??
+                              'Dados não disponíveis',
                         ),
-                        SizedBox(height: 8),
-                        Text(
-                          especieDetails?['descricoes-botanicas/especie/${widget.especieId}']?['descricao'] ?? 'Descrição não disponível.',
-                        ),
-                        SizedBox(height: 16),
-
-                        // Exibindo biologia reprodutiva com verificação de nulidade
-                        Text(
-                          "Biologia Reprodutiva:",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          especieDetails?['biologias-reprodutivas/especie/${widget.especieId}'] ?? 'Informação não disponível.',
+                        buildSection(
+                          title: "Descrição",
+                          content: especieDetails?['descricao'] ??
+                              'Dados não disponíveis',
                         ),
                       ],
                     ),
                   ),
                 ),
+      // Adicionando o BottomNavigationBar personalizado flutuante
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Início',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.map),
+                label: 'Mapa',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.nature),
+                label: 'Espécies',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.green,
+            onTap: _onItemTapped,
+            elevation: 0, // Remove sombra padrão
+            backgroundColor: Colors.transparent, // Deixa transparente
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Widget para exibir uma seção com título e conteúdo
+  Widget buildSection({required String title, required String content}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8),
+          Text(
+            content,
+            style: TextStyle(fontSize: 16),
+          ),
+        ],
+      ),
     );
   }
 }

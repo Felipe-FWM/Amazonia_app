@@ -22,7 +22,7 @@ final response = await http.get(
 Uri.parse('$apiUrl/$endpoint'),
 headers: {
 'Content-Type': 'application/json',
-'Authorization': 'Bearer $token', // Usando o token para autenticação
+'Authorization': 'Bearer $token', 
 },
 );
 
