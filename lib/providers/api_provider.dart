@@ -23,14 +23,6 @@ class ApiProvider with ChangeNotifier {
       },
     );
 
-    print('AQUIIIIIIIIIII');
-    print(response.body);
-
-
-
-    print(response.statusCode);
-
-
     if (response.statusCode == 200) {
       return json.decode(response.body)['data'];
     } else {
@@ -38,8 +30,6 @@ class ApiProvider with ChangeNotifier {
       throw Exception("Erro ao buscar espécies.");
     }
   }
-
-  
 
   // Método para buscar os detalhes de uma espécie
   Future<Map<String, dynamic>> fetchEspecieDetails(BuildContext context, int id) async {
@@ -64,8 +54,6 @@ class ApiProvider with ChangeNotifier {
         );
 
         if (response.statusCode == 200) {
-          print('printaaaaaaaa');
-          print(response.body);
           return MapEntry('data', json.decode(response.body)['data']);
         } else {
           return MapEntry('data', null);
@@ -77,8 +65,6 @@ class ApiProvider with ChangeNotifier {
 
     final results = await Future.wait(futures);
 
-    print('MAPA JHONSONNNNN');
-    print(results);
     return Map.fromEntries(results);
   }
 }
