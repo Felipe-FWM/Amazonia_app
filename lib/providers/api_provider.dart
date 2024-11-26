@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class ApiProvider with ChangeNotifier {
   final String baseUrl = "https://noodletop.com.br/api/amazonia";
 
-  // Método para buscar as espécies
+
   Future<List<dynamic>> fetchEspecies(BuildContext context) async {
     final token = Provider.of<AuthProvider>(context, listen: false).authToken;
 
@@ -31,7 +31,7 @@ class ApiProvider with ChangeNotifier {
     }
   }
 
-  // Método para buscar os detalhes de uma espécie
+
   Future<Map<String, dynamic>> fetchEspecieDetails(BuildContext context, int id) async {
     final token = Provider.of<AuthProvider>(context, listen: false).authToken;
 

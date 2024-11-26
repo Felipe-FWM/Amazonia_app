@@ -19,7 +19,7 @@ class AuthProvider with ChangeNotifier {
       }),
     );
 
-    // Verificando a resposta
+
     if (response.statusCode == 200) {
       try {
         final responseData = json.decode(response.body);
@@ -50,7 +50,7 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Função para logout (limpar o token)
+
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('auth_token');
